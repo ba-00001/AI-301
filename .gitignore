@@ -1,9 +1,10 @@
-# Nested independent repo — committed separately to AI-301-dev-notes.git
+# independent repo — committed separately to AI-301-dev-notes.git
 AI-301-dev-notes/
 
-# Local-only assistant instructions — never commit
-CLAUDE.md
-CLAUDE.MD
+# macOS junk
+.DS_Store
+
+
 
 # Developer scratch / planning — never commit
 **/[Dd]ev[ _-][Nn]otes/
