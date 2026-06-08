@@ -19,8 +19,8 @@ issue well. No code or local environment setup yet — that starts in Phase II.
 - [x] **4. Read my top candidates carefully** — read the issue bodies, labels, and confirmed no linked PRs.
 - [x] **5. Run the Issue Selection Checklist** — scored below; #39 scores highest.
 - [x] **6. Pick one and commit to it** — chose #39.
-- [ ] **7. Fork the Tessera.io repo on GitHub.**
-- [ ] **8. Comment on issue #39 (text drafted below) and note it on the course Google Sheet.**
+- [x] **7. Fork the Tessera.io repo on GitHub** — done ([ba-00001/Tessera.io](https://github.com/ba-00001/Tessera.io)); also starred the repo.
+- [x] **8. Comment on issue #39** — posted (`/claim` + plan); the bot assigned #39 to me. Still to do: note it on the course Google Sheet.
 - [ ] **9. Set README Status to "Phase I Complete" and submit my repo link in the course portal.**
 - [ ] **10. Announce in Slack `#dts-su26-ai301-celebration` (text drafted below).**
 

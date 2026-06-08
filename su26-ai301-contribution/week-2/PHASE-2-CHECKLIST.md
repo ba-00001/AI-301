@@ -35,11 +35,10 @@ its dependencies, not to add a new route. Documented in full in the
   files (`main.py`, `db.py`, `config.py`).
 - [x] **6. Update the Contribution README** — Environment Setup, Steps to
   Reproduce, branch link, and Implementation Plan all filled in.
-- [ ] **7. Star + fork the repo** on GitHub (no fork exists yet at
-  `github.com/ba-00001/Tessera.io`).
-- [ ] **8. `/claim` issue #39** in a comment so the auto-claim bot assigns it to me.
-- [ ] **9. Create and push the working branch** so the README link resolves (see
-  commands below).
+- [x] **7. Star + fork the repo** on GitHub — done ([ba-00001/Tessera.io](https://github.com/ba-00001/Tessera.io)).
+- [x] **8. `/claim` issue #39** — comment posted; the auto-claim bot assigned #39 to me.
+- [x] **9. Create and push the working branch** — pushed; link resolves:
+  [feature/issue-39-health-endpoint](https://github.com/ba-00001/Tessera.io/tree/feature/issue-39-health-endpoint).
 - [ ] **10. Submit the check-in form** marking **"Phase II Complete"** in the course
   portal.
 - [ ] **11. (Recommended) Announce in `#dts-su26-ai301-celebration`** (text drafted

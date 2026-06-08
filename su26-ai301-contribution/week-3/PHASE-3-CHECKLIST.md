@@ -40,9 +40,10 @@ Diff: 4 files, +161/−4, scoped to the issue. All commits signed off (`-s`).
   Testing notes, branch link, Code Changes.
 - [x] **7. Save reproducible artifacts** — bundle + patches + combined diff in
   [fork-artifacts/](fork-artifacts/).
-- [ ] **8. Push the branch to my fork** (after the fork exists — see commands below).
-  Using the bundle keeps the commit SHAs identical to the ones in the README.
-- [ ] **9. (Strongly encouraged) Open a draft PR** referencing #39.
+- [x] **8. Push the branch to my fork** — pushed from the bundle, so the commit
+  SHAs match the README:
+  [feature/issue-39-health-endpoint](https://github.com/ba-00001/Tessera.io/tree/feature/issue-39-health-endpoint).
+- [x] **9. Open a draft PR** referencing #39 — [PR #66](https://github.com/Kushaal-k/Tessera.io/pull/66) (draft).
 - [ ] **10. Submit the check-in form** marking **"Phase III Complete."**
 - [ ] **11. Post a scrum update** in `#dts-su26-ai301-build-support` (twice-weekly
   Mon/Fri) and announce in `#dts-su26-ai301-celebration` (text below).

@@ -322,12 +322,14 @@ test suite. All tests pass; lint/format clean.
 
 ## Pull Request
 
-_(Phase IV.)_
-
-**PR Link:** _TBD_
-**PR Description:** _TBD_
-**Maintainer Feedback:** _TBD_
-**Status:** Not yet opened
+**PR Link:** https://github.com/Kushaal-k/Tessera.io/pull/66 (**draft**, opened in
+Phase III for early feedback — the course encourages a draft PR before Phase IV).
+**Issue:** [#39](https://github.com/Kushaal-k/Tessera.io/issues/39) — claimed and
+assigned to me via the project's `/claim` bot.
+**PR Description:** Summary, changes, testing, and the `503`-vs-`200` design
+question — see the PR body.
+**Maintainer Feedback:** _Awaiting review (Phase IV)._
+**Status:** Draft open; full review requested in Phase IV.
 
 ---
 
