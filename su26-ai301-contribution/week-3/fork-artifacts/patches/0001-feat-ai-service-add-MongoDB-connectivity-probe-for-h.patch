@@ -1,0 +1,94 @@
+From 6c2f3ce25f529226f5c2bb6715efe4975dc27fc2 Mon Sep 17 00:00:00 2001
+From: BRIANB <124537281+ba-00001@users.noreply.github.com>
+Date: Mon, 8 Jun 2026 10:00:00 -0400
+Subject: [PATCH 1/3] feat(ai-service): add MongoDB connectivity probe for
+ health checks
+
+Add db.check_connection() which pings MongoDB and returns connectivity
+stats (connected, latency_ms, database, collection) without raising, and
+configure the client with a bounded serverSelectionTimeoutMS so an
+unreachable database fails fast instead of hanging on Motor's 30s default.
+
+Refs #39
+
+Signed-off-by: BRIANB <124537281+ba-00001@users.noreply.github.com>
+---
+ apps/ai-service/src/config.py |  3 +++
+ apps/ai-service/src/db.py     | 39 ++++++++++++++++++++++++++++++++++-
+ 2 files changed, 41 insertions(+), 1 deletion(-)
+
+diff --git a/apps/ai-service/src/config.py b/apps/ai-service/src/config.py
+index 6736a31..744f719 100644
+--- a/apps/ai-service/src/config.py
++++ b/apps/ai-service/src/config.py
+@@ -5,6 +5,9 @@ class Settings(BaseSettings):
+     MONGODB_URI: str = "mongodb://localhost:27017"
+     MONGODB_DB_NAME: str = "tessera"
+     MONGODB_COLLECTION: str = "code_chunks"
++    # Bound server selection so an unreachable database fails fast (e.g. in the
++    # /health probe) instead of waiting out Motor's 30s default.
++    MONGODB_TIMEOUT_MS: int = 3000
+     EMBEDDING_DIMENSIONS: int = 1536
+     MCP_SERVER_NAME: str = "tessera-ai"
+ 
+diff --git a/apps/ai-service/src/db.py b/apps/ai-service/src/db.py
+index 4fe75a1..d762ff1 100644
+--- a/apps/ai-service/src/db.py
++++ b/apps/ai-service/src/db.py
+@@ -1,3 +1,5 @@
++from time import perf_counter
++
+ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection
+ from .config import settings
+ 
+@@ -6,7 +8,12 @@ _client: AsyncIOMotorClient | None = None  # type: ignore[type-arg]
+ 
+ async def connect_db() -> None:
+     global _client
+-    _client = AsyncIOMotorClient(settings.MONGODB_URI)
++    # serverSelectionTimeoutMS keeps the /health probe (and any first query)
++    # fast when the database is unreachable, instead of Motor's 30s default.
++    _client = AsyncIOMotorClient(
++        settings.MONGODB_URI,
++        serverSelectionTimeoutMS=settings.MONGODB_TIMEOUT_MS,
++    )
+ 
+ 
+ async def close_db() -> None:
+@@ -21,3 +28,33 @@ def get_collection() -> AsyncIOMotorCollection:  # type: ignore[type-arg]
+         raise RuntimeError("Database not connected. Call connect_db() first.")
+     db = _client[settings.MONGODB_DB_NAME]
+     return db[settings.MONGODB_COLLECTION]
++
++
++async def check_connection() -> dict[str, object]:
++    """Ping MongoDB and report connectivity statistics for the health check.
++
++    Never raises: a failed or missing connection is reported as
++    ``connected: False`` so the caller can degrade gracefully instead of
++    returning a 500.
++    """
++    status: dict[str, object] = {
++        "connected": False,
++        "database": settings.MONGODB_DB_NAME,
++        "collection": settings.MONGODB_COLLECTION,
++        "latency_ms": None,
++    }
++
++    if _client is None:
++        status["error"] = "Database client not initialized"
++        return status
++
++    start = perf_counter()
++    try:
++        await _client.admin.command("ping")
++    except Exception as exc:
++        status["error"] = str(exc)
++        return status
++
++    status["connected"] = True
++    status["latency_ms"] = round((perf_counter() - start) * 1000, 2)
++    return status
+-- 
+2.50.1 (Apple Git-155)
+

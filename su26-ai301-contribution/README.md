@@ -4,7 +4,7 @@
 **Student:** Brian Bazurto
 **Project:** [Kushaal-k/Tessera.io](https://github.com/Kushaal-k/Tessera.io) — an open-source collaborative developer sandbox with real-time CRDT sync and secure remote code execution for human-AI pair programming
 **Issue:** [#39 — Write a JSON health endpoint for Python AI service](https://github.com/Kushaal-k/Tessera.io/issues/39)
-**Status:** Phase II — Reproduce & Plan (Complete)
+**Status:** Phase III — Build (Complete)
 
 ---
 
@@ -209,27 +209,42 @@ Commit message (`feat: …`), and run the project's Python lint
 
 ## Testing Strategy
 
-_(Tests are written in Phase III; the plan below is set from the Phase II
-investigation.)_
+I added a `pytest` suite at `apps/ai-service/tests/test_health.py` (the service
+had no test suite before), using a small fake Motor client so the tests need no
+live MongoDB. All 5 tests pass and `ruff check` / `ruff format --check` are clean.
 
 ### Unit Tests
 
-- [ ] `GET /health` returns `200` and the expected JSON shape (`status`, `database`,
-      `models`) when the Motor `ping` succeeds (mocked healthy DB).
-- [ ] `GET /health` returns `503` and `database.connected: false` when the `ping`
-      raises / times out (mocked unreachable DB).
-- [ ] The `models` block reports `MCP_SERVER_NAME` and `EMBEDDING_DIMENSIONS` from
-      `Settings`.
+- [x] `db.check_connection()` returns `connected: false` (with an `error`) when the
+      client isn't initialized — `test_check_connection_no_client`.
+- [x] `db.check_connection()` returns `connected: true` with a float `latency_ms`
+      when the ping succeeds — `test_check_connection_success`.
+- [x] `db.check_connection()` reports the error and `connected: false` when the ping
+      raises — `test_check_connection_failure`.
+- [x] `GET /health` returns `200`, `status: "ok"`, and the `database`/`models`
+      blocks when the DB is up — `test_health_returns_200_and_stats_when_db_up`.
+- [x] `GET /health` returns `503` and `status: "degraded"` when the DB is down —
+      `test_health_returns_503_when_db_down`.
 
-### Integration Tests
+### Integration / Manual Testing
 
-- [ ] With a real MongoDB container up, the endpoint is reachable and reports
-      `database.connected: true` with a latency value.
+- [x] **Baseline reproduced** (Phase II): MongoDB down → the old stub returns
+      `200 {"status":"ok"}`.
+- [x] **After the fix, DB down:** ran `uvicorn` with no MongoDB and `curl`'d
+      `/health` → `HTTP 503`, `status: "degraded"`, `database.connected: false`
+      with the connection-refused error and the `models` block. Response came back
+      in ~3s (the new `serverSelectionTimeoutMS`), not Motor's 30s default.
+- [x] **After the fix, DB up:** asserted in `test_health_returns_200_and_stats_when_db_up`
+      (`200` + `database.connected: true` + `latency_ms`). The live container run
+      uses the project README's `docker run … mongo:7` step.
 
-### Manual Testing
+### How to run
 
-- [ ] Reproduce the baseline (MongoDB down → today's stub returns `200 {"status":"ok"}`).
-- [ ] After the fix: MongoDB down → `503`; MongoDB up → `200` with live stats.
+```bash
+cd apps/ai-service && source .venv/bin/activate
+python -m pytest tests/ -v
+python -m ruff check src/ tests/ && python -m ruff format --check src/ tests/
+```
 
 ---
 
@@ -251,10 +266,57 @@ UMPIRE plan above (expand `health_check()` + add a Motor connectivity helper in
 `db.py`). Detailed tracker in
 [week-2/PHASE-2-CHECKLIST.md](week-2/PHASE-2-CHECKLIST.md).
 
+### Week 3 Progress (June 8, 2026)
+
+Phase III — Build. Implemented the Phase II plan on the branch
+`feature/issue-39-health-endpoint`, in three small signed-off commits, and added a
+test suite. All tests pass; lint/format clean.
+
+**What I built:**
+
+- `apps/ai-service/src/db.py` — added `check_connection()`, which pings MongoDB
+  (`await _client.admin.command("ping")`), times it, and returns
+  `{connected, latency_ms, database, collection, error?}` without raising. Also
+  set `serverSelectionTimeoutMS` on the client in `connect_db()` so an unreachable
+  DB fails in ~3s instead of Motor's 30s default (commit `6c2f3ce`).
+- `apps/ai-service/src/config.py` — added `MONGODB_TIMEOUT_MS` (default `3000`) to
+  drive that timeout (commit `6c2f3ce`).
+- `apps/ai-service/src/main.py` — replaced the static `{"status":"ok"}` stub in
+  `health_check()` with a JSON payload reporting a `database` block (connectivity +
+  latency) and a `models` block (`MCP_SERVER_NAME`, `EMBEDDING_DIMENSIONS`,
+  `embedding_provider`), returning `200` when healthy and `503` when the DB is down
+  (commit `cb1d8de`).
+- `apps/ai-service/tests/test_health.py` — new `pytest` suite, 5 tests, covering
+  the probe and both endpoint paths with a fake Motor client (commit `fda55d2`).
+
+**Challenges faced:**
+
+- My first attempt bounded the ping with `asyncio.wait_for(..., timeout=2.0)`, but a
+  live run with no MongoDB still took **30s** to respond. Motor bridges the ping to
+  a worker thread that doesn't honor asyncio cancellation, so `wait_for` never
+  fired. I traced this from the response body — the error text was pymongo's own
+  `Timeout: 30s` server-selection message, not a `wait_for` timeout. **Fix:**
+  configure the client with `serverSelectionTimeoutMS` so pymongo itself fails fast;
+  a re-run returned `503` in ~3s. (Verified with a `curl -w "%{time_total}"`.)
+- The service had no Python test suite, so there was no neighboring test to model.
+  I followed the repo's existing style instead (`pydantic` `BaseModel` shapes in
+  `rag.py`, type hints, `ruff` formatting) and used FastAPI's `TestClient` with a
+  fake client to avoid a real DB dependency.
+
+**Commits this week (branch `feature/issue-39-health-endpoint`):**
+
+- `6c2f3ce` — feat(ai-service): add MongoDB connectivity probe for health checks
+- `cb1d8de` — feat(ai-service): report DB and model status from /health
+- `fda55d2` — test(ai-service): cover /health endpoint and connectivity probe
+
 ### Code Changes
 
-_None yet — code work begins in Phase III. Reproduction in Phase II was
-investigation only (running the unmodified service)._
+- **Branch:** https://github.com/ba-00001/Tessera.io/tree/feature/issue-39-health-endpoint
+- **Diff:** 4 files, +161/−4, scoped to the issue (`config.py`, `db.py`, `main.py`,
+  `tests/test_health.py`). Reviewable copy of the diff and the exact commits are in
+  [week-3/fork-artifacts/](week-3/fork-artifacts/) (combined diff, per-commit
+  patches, and a git bundle that preserves the commit SHAs above).
+- All commits are signed off (`git commit -s`) per the project `CONTRIBUTING.md`.
 
 ---
 
@@ -273,15 +335,24 @@ _(Phase IV.)_
 
 ### Technical Skills Gained
 
-_To be filled in as I work._
+- FastAPI route + response handling (`JSONResponse` with an explicit status code),
+  and async MongoDB health probing with Motor (`admin.command("ping")`).
+- Why `asyncio.wait_for` can't bound a thread-bridged driver call, and that the
+  right lever is the client's `serverSelectionTimeoutMS`.
+- Testing an ASGI app with FastAPI's `TestClient` and a hand-rolled fake client so
+  the suite needs no live database; matching a project's `ruff` style.
 
 ### Challenges Overcome
 
-_To be filled in as I work._
+- Diagnosed the 30s `/health` hang from the response body (pymongo's own timeout
+  message gave it away) and fixed it at the client-config level rather than papering
+  over it with an async timeout that didn't actually fire.
 
 ### What I'd Do Differently Next Time
 
-_To be filled in as I work._
+- Run a quick `curl -w "%{time_total}"` on a new endpoint earlier — the latency
+  problem was invisible to the unit tests (which mock the client) and only showed up
+  in a live run. I'll add a timing check to my manual-test habit from the start.
 
 ---
 
