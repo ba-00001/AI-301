@@ -14,7 +14,9 @@
 > weeks [1](week-1/PHASE-1-CHECKLIST.md)–[4](week-4/PHASE-4-CHECKLIST.md) cover Cycle 1
 > Phases I–IV; weeks [5](week-5/PHASE-1-CHECKLIST.md)–[8](week-8/PHASE-4-CHECKLIST.md)
 > cover Cycle 2 Phases I–IV; [week 9](week-9/WEEK-9-ITERATE-AND-REFLECT.md) is iteration
-> and the final reflection.
+> and the final reflection; [week 10](week-10/WEEK-10-PROGRAM-CLOSEOUT.md) is the program
+> closeout. **Program milestone met twice** — two review-ready PRs (#66, #78), both open
+> against upstream `main` and awaiting maintainer review.
 
 ---
 
