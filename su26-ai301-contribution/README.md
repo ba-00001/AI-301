@@ -6,6 +6,16 @@
 **Issue:** [#39 — Write a JSON health endpoint for Python AI service](https://github.com/Kushaal-k/Tessera.io/issues/39)
 **Status:** Phase IV — Submit & Iterate (PR open & ready for review; awaiting maintainer review)
 
+> **Two contributions in this repo.** This README documents **Contribution #1**
+> (Cycle 1, issue #39 → [PR #66](https://github.com/Kushaal-k/Tessera.io/pull/66)).
+> After reaching Phase IV I started a second cycle —
+> **[Contribution #2](contribution-2/README.md)** (issue #46, the Docker-log demuxer →
+> [PR #78](https://github.com/Kushaal-k/Tessera.io/pull/78)). Per-week trackers:
+> weeks [1](week-1/PHASE-1-CHECKLIST.md)–[4](week-4/PHASE-4-CHECKLIST.md) cover Cycle 1
+> Phases I–IV; weeks [5](week-5/PHASE-1-CHECKLIST.md)–[8](week-8/PHASE-4-CHECKLIST.md)
+> cover Cycle 2 Phases I–IV; [week 9](week-9/WEEK-9-ITERATE-AND-REFLECT.md) is iteration
+> and the final reflection.
+
 ---
 
 ## Why I Chose This Issue
