@@ -4,7 +4,7 @@
 **Student:** Brian Bazurto
 **Project:** [Kushaal-k/Tessera.io](https://github.com/Kushaal-k/Tessera.io) — an open-source collaborative developer sandbox with real-time CRDT sync and secure remote code execution for human-AI pair programming
 **Issue:** [#39 — Write a JSON health endpoint for Python AI service](https://github.com/Kushaal-k/Tessera.io/issues/39)
-**Status:** Phase III — Build (Complete)
+**Status:** Phase IV — Submit & Iterate (PR open & ready for review; awaiting maintainer review)
 
 ---
 
@@ -309,6 +309,36 @@ test suite. All tests pass; lint/format clean.
 - `cb1d8de` — feat(ai-service): report DB and model status from /health
 - `fda55d2` — test(ai-service): cover /health endpoint and connectivity probe
 
+### Week 4 Progress (June 9, 2026)
+
+Phase IV — Submit & Iterate. Took the working Phase III branch from draft to a
+review-ready pull request. No new code this phase: the work was submission quality
+and surfacing the PR to the maintainer.
+
+**What I did:**
+
+- Ran the pre-submission checklist: confirmed the fix still reproduces correctly,
+  `pytest` is 5/5 green, and the diff is scoped to the issue (`git diff` against
+  upstream `main` shows only the four intended files, no debug code or stray
+  changes). The PR's **CI Pipeline (Lint, Typecheck, Test, Build)** check is passing.
+- **Rewrote the PR description to use the project's own
+  [`.github/pull_request_template.md`](https://github.com/Kushaal-k/Tessera.io/blob/main/.github/pull_request_template.md)**
+  rather than my earlier ad-hoc structure: a "why-first" Description, the
+  `Type of Change` selection, `How Has This Been Tested` (automated + manual, with
+  before/after `/health` output), and the project Checklist. Used `Fixes #39` (the
+  project's close keyword) so the issue auto-closes on merge.
+- **Marked the PR ready for review** (it had been a draft) and left a comment
+  @-mentioning the maintainer (@Kushaal-k) introducing myself as a first-time
+  contributor, summarizing the change, and re-raising the `503`-vs-always-`200`
+  design question.
+- Updated this README's _Pull Request_ section with the final PR state and a dated
+  Maintainer Feedback log.
+
+**Why no code changed this phase:** Phase III already shipped a tested, lint-clean
+implementation that matched the Phase II plan, so Phase IV was about meeting the
+project's submission bar (template, ready-for-review, reviewer surfaced) and opening
+the feedback loop — not rewriting the solution.
+
 ### Code Changes
 
 - **Branch:** https://github.com/ba-00001/Tessera.io/tree/feature/issue-39-health-endpoint
@@ -322,14 +352,33 @@ test suite. All tests pass; lint/format clean.
 
 ## Pull Request
 
-**PR Link:** https://github.com/Kushaal-k/Tessera.io/pull/66 (**draft**, opened in
-Phase III for early feedback — the course encourages a draft PR before Phase IV).
+**PR Link:** https://github.com/Kushaal-k/Tessera.io/pull/66 (open against upstream
+`Kushaal-k/Tessera.io:main`, from `ba-00001/Tessera.io:feature/issue-39-health-endpoint`).
 **Issue:** [#39](https://github.com/Kushaal-k/Tessera.io/issues/39) — claimed and
-assigned to me via the project's `/claim` bot.
-**PR Description:** Summary, changes, testing, and the `503`-vs-`200` design
-question — see the PR body.
-**Maintainer Feedback:** _Awaiting review (Phase IV)._
-**Status:** Draft open; full review requested in Phase IV.
+assigned to me via the project's `/claim` bot; the PR body links it with `Fixes #39`
+so it auto-closes on merge.
+
+**PR Description:** Rewrote the PR using the project's own
+[`pull_request_template.md`](https://github.com/Kushaal-k/Tessera.io/blob/main/.github/pull_request_template.md)
+— a "why-first" Description (the placeholder route reported healthy with MongoDB
+down), Type of Change, How Has This Been Tested (automated + manual, with
+before/after `/health` output), and the project Checklist (signed-off commits,
+read `CONTRIBUTING.md`, self-review). The change makes `/health` ping MongoDB and
+report `database` + `models` blocks, returning `200`/`503` by DB state.
+
+**Maintainer Feedback:**
+
+- **June 8, 2026** — Opened the PR as a draft for early feedback (Phase III). The
+  repo's `github-actions` bot posted the first-PR welcome and confirmed the
+  Gatekeeper CI gate. CI Pipeline (Lint, Typecheck, Test, Build) passed.
+- **June 9, 2026** — Phase IV: rewrote the description to the project's PR template,
+  **marked the PR ready for review** (out of draft), and left a comment
+  @-mentioning the maintainer (@Kushaal-k) to request review, restating the
+  `503`-vs-always-`200` design question. _No human-maintainer review yet — awaiting
+  first response._
+
+**Status:** **Awaiting review** (ready-for-review, not draft; reviewer @-mentioned
+June 9, 2026; CI green).
 
 ---
 
@@ -343,18 +392,34 @@ question — see the PR body.
   right lever is the client's `serverSelectionTimeoutMS`.
 - Testing an ASGI app with FastAPI's `TestClient` and a hand-rolled fake client so
   the suite needs no live database; matching a project's `ruff` style.
+- The submission mechanics: opening a fork→upstream PR, filling a project's own
+  `pull_request_template.md`, using the project's close keyword (`Fixes #`) so the
+  issue auto-closes on merge, and converting a draft to ready-for-review once CI is
+  green.
 
 ### Challenges Overcome
 
 - Diagnosed the 30s `/health` hang from the response body (pymongo's own timeout
   message gave it away) and fixed it at the client-config level rather than papering
   over it with an async timeout that didn't actually fire.
+- Resisted the urge to keep polishing before submitting. The Phase III code was
+  tested and lint-clean, so the right Phase IV move was to ship it for review and
+  open the feedback loop — not to gold-plate a PR no maintainer had seen yet.
 
 ### What I'd Do Differently Next Time
 
 - Run a quick `curl -w "%{time_total}"` on a new endpoint earlier — the latency
   problem was invisible to the unit tests (which mock the client) and only showed up
   in a live run. I'll add a timing check to my manual-test habit from the start.
+- Check for the project's PR template **before** writing any PR prose. I drafted a
+  Phase III description in my own structure and rewrote it in Phase IV once I read
+  the repo's `.github/pull_request_template.md`. Reading `.github/` first (template,
+  CODEOWNERS, workflows) tells you both how to submit and who reviews — do it before
+  the first commit, not at submission time.
+- Lead the PR description with the _why_ before the _what_. My first draft opened
+  with the change; reviewers need the problem and the investigation first, then the
+  diff. I reordered it in Phase IV to open with "the route reported healthy with the
+  DB down."
 
 ---
 
