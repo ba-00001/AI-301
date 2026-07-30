@@ -6,6 +6,8 @@
 **Issue:** [#39 — Write a JSON health endpoint for Python AI service](https://github.com/Kushaal-k/Tessera.io/issues/39)
 **Status:** Phase IV — Submit & Iterate (PR open & ready for review; awaiting maintainer review)
 
+📽️ **Lightning Talks slides:** [AI301 AI Open Source Capstone — Lightning Talks deck](https://docs.google.com/presentation/d/1__D9MDUaeAnVnixWGanx0xrwC9Nu3YLrlpN4m_GqT9A/edit?usp=sharing)
+
 > **Two contributions in this repo.** This README documents **Contribution #1**
 > (Cycle 1, issue #39 → [PR #66](https://github.com/Kushaal-k/Tessera.io/pull/66)).
 > After reaching Phase IV I started a second cycle —
