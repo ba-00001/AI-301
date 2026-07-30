@@ -4,6 +4,8 @@
 **Student:** Brian Bazurto (Member ID 76069)
 **Project 10 due:** Thu, August 6, 2026, 2:59 AM EDT · **Final week.**
 
+📽️ **Lightning Talks slides:** [AI301 AI Open Source Capstone — Lightning Talks deck](https://docs.google.com/presentation/d/1__D9MDUaeAnVnixWGanx0xrwC9Nu3YLrlpN4m_GqT9A/edit?usp=sharing)
+
 Week 10 is the program's final self-paced check-in — graded against the phase I report,
 not the calendar. I finished both contribution cycles ahead of schedule, so this week
 is the closeout: confirm everything is healthy, document the program honestly, and set

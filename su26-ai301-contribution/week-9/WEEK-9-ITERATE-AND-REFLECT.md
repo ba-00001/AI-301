@@ -4,6 +4,8 @@
 **Student:** Brian Bazurto (Member ID 76069)
 **Project 9 due:** Thu, July 30, 2026, 2:59 AM EDT
 
+📽️ **Lightning Talks slides:** [AI301 AI Open Source Capstone — Lightning Talks deck](https://docs.google.com/presentation/d/1__D9MDUaeAnVnixWGanx0xrwC9Nu3YLrlpN4m_GqT9A/edit?usp=sharing)
+
 Module 2 weeks are self-paced: you submit whatever phase you're on for whatever cycle,
 graded against the four phase rubrics. By Week 9 I have **two** review-ready PRs open,
 so this week is about keeping both feedback loops alive and writing a portfolio-grade

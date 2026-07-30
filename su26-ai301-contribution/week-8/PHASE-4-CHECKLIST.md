@@ -3,6 +3,8 @@
 **Course:** AI301 — AI Open Source Capstone (Summer 2026, Section 1A)
 **Student:** Brian Bazurto (Member ID 76069)
 
+📽️ **Lightning Talks slides:** [AI301 AI Open Source Capstone — Lightning Talks deck](https://docs.google.com/presentation/d/1__D9MDUaeAnVnixWGanx0xrwC9Nu3YLrlpN4m_GqT9A/edit?usp=sharing)
+
 Phase IV for Contribution #2: open the PR, surface it to the maintainer, document the
 loop. A review-ready PR is the completion milestone — merged or not.
 

@@ -3,6 +3,8 @@
 **Course:** AI301 — AI Open Source Capstone (Summer 2026, Section 1A)
 **Student:** Brian Bazurto (Member ID 76069)
 
+📽️ **Lightning Talks slides:** [AI301 AI Open Source Capstone — Lightning Talks deck](https://docs.google.com/presentation/d/1__D9MDUaeAnVnixWGanx0xrwC9Nu3YLrlpN4m_GqT9A/edit?usp=sharing)
+
 Phase III for Contribution #2: implement the plan, add tests, push working commits.
 
 **Issue:** [Kushaal-k/Tessera.io #46](https://github.com/Kushaal-k/Tessera.io/issues/46)
